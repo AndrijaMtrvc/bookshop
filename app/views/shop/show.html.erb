@@ -1,0 +1,47 @@
+<div class="bg-gradient-to-r from-orange-100 to-orange-200 min-h-screen flex flex-col items-center justify-center pt-24">
+  <div class="max-w-7xl mx-auto px-6 py-10 w-full">
+    <div class="bg-white rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-start">
+      <% if @book.image_url.present? %>
+        <div class="p-6 bg-gray-100 rounded-lg">
+          <%= image_tag @book.image_url, class: "w-48 h-86 object-cover rounded-lg shadow-md", alt: @book.title %>
+        </div>
+      <% end %>
+      <div class="flex-1 flex flex-col text-center md:text-left p-4">
+        <h2 class="text-4xl font-bold text-gray-800 mt-4"><%= @book.title %></h2>
+        <p class="text-gray-600 text-xl mt-4">by <%= @book.author %></p>
+        <p class="text-gray-500 text-lg italic mt-2">Genre: <%= @book.genre %></p>
+        <p class="text-red-900 font-bold text-3xl mt-4">$<%= @book.price %></p>
+        <div class="flex items-center gap-4 mt-4">
+          <%= form_with url: add_to_cart_shop_path(@book), method: :post, local: true, class: "flex items-center gap-2" do |form| %>
+            <div class="flex items-center gap-2">
+              <label for="quantity" class="text-gray-700 text-lg">Quantity:</label>
+              <%= form.number_field :quantity, value: 1, min: 1, max: @book.stock - @quantity_in_cart, class: "p-3 border rounded-lg w-24 text-center text-lg", id: "quantity" %>
+            </div>
+            <%= form.submit "Add to Cart", class: "bg-red-900 text-white py-3 px-6 rounded-lg hover:bg-red-700 text-lg" %>
+          <% end %>
+          <p class="text-gray-700 text-lg">In stock: <%= @book.stock %></p>
+          <p class="text-gray-700 text-lg">In cart: <%= @quantity_in_cart %></p>
+        </div>
+        <a href="#" id="toggle-description" class="text-red-900 text-lg underline mt-auto">Book description</a>
+        <p id="book-description" class="text-gray-600 text-base mt-2 hidden"><%= @book.description.present? ? @book.description : "No description available" %></p>
+      </div>
+    </div>
+    <div class="mt-6 text-center">
+      <%= link_to "Back to Shop", shop_index_path, class: "text-red-900 text-xl underline hover:text-red-700" %>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('toggle-description').addEventListener('click', function(e) {
+    e.preventDefault();
+    const description = document.getElementById('book-description');
+    if (description.classList.contains('hidden')) {
+      description.classList.remove('hidden');
+      this.textContent = 'Hide description';
+    } else {
+      description.classList.add('hidden');
+      this.textContent = 'Book description';
+    }
+  });
+</script>

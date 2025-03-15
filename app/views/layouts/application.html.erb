@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookshop</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+<body>
+  <nav class="bg-white text-red-900 py-6 px-0 fixed top-0 left-0 right-0 z-30 shadow-lg">
+    <div class="flex items-center w-full">
+      <h1 class="text-3xl font-bold pl-6">AndryShop</h1>
+      <div class="flex-1 flex justify-center">
+        <div class="flex items-center">
+          <%= link_to "Home", root_path, class: "hover:text-red-700 transition duration-200 text-xl", style: "margin-left: 0;" %>
+          <%= link_to "Shop", shop_index_path, class: "hover:text-red-700 transition duration-200 text-xl", style: "margin-left: 32px;" %>
+          <% if session[:user_id] && defined?(current_user) && current_user %>
+            <% if current_user.first_name && current_user.last_name %>
+              <span class="hover:text-red-700 transition duration-200 text-xl" style="margin-left: 32px;">Logged in: <%= current_user.first_name %> <%= current_user.last_name %></span>
+            <% end %>
+            <% if current_user.status == "admin" %>
+              <%= link_to "Admin panel", admin_path, class: "hover:text-red-700 transition duration-200 text-xl", style: "margin-left: 32px;" %>
+            <% end %>
+            <%= link_to "Sign Out", logout_path, method: :delete, data: { turbo_method: :delete }, class: "hover:text-red-700 transition duration-200 text-xl", style: "margin-left: 32px;" %>
+          <% else %>
+            <%= link_to "Sign In", new_session_path, class: "hover:text-red-700 transition duration-200 text-xl", style: "margin-left: 32px;" %>
+            <%= link_to "Register", new_user_path, class: "hover:text-red-700 transition duration-200 text-xl", style: "margin-left: 32px;" %>
+          <% end %>
+        </div>
+      </div>
+      <div class="pr-4 flex items-center space-x-4">
+        <%= link_to cart_shop_index_path, class: "text-3xl hover:text-red-700 transition duration-200" do %>
+          🛒
+        <% end %>
+      </div>
+    </div>
+  </nav>
+
+  <div class="bg-gradient-to-r from-orange-100 to-orange-200 min-h-screen pt-24">
+    <% if notice.present? %>
+      <p class="text-green-500 text-center py-2"><%= notice %></p>
+    <% end %>
+    <% if alert.present? %>
+      <p class="text-red-500 text-center py-2"><%= alert %></p>
+    <% end %>
+    <%= yield %>
+  </div>
+</body>
+</html>
