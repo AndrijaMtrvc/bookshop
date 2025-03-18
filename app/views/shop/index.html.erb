@@ -52,11 +52,11 @@
         <%= form_with url: shop_index_path, method: :get, local: true, class: "flex flex-col md:flex-row gap-6" do %>
           <div class="flex-1">
             <label for="genres" class="text-gray-700 font-semibold block mb-2">Filter by Genre:</label>
-            <%= select_tag "genres[]", options_for_select(@genres, params[:genres]), multiple: true, class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
+            <%= select_tag "genres[]", options_from_collection_for_select(@genres, :id, :name, params[:genres]), multiple: true, class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
           </div>
           <div class="flex-1">
             <label for="authors" class="text-gray-700 font-semibold block mb-2">Filter by Author:</label>
-            <%= select_tag "authors[]", options_for_select(@authors, params[:authors]), multiple: true, class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
+            <%= select_tag "authors[]", options_from_collection_for_select(@authors, :id, :name, params[:authors]), multiple: true, class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
           </div>
           <div class="flex items-end gap-3">
             <%= submit_tag "Apply Filters", class: "bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition duration-200" %>
@@ -70,16 +70,16 @@
       <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
         <% @books.each do |book| %>
           <%= link_to shop_path(book), class: "block" do %>
-            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-full h-[500px]">
+            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-full h-full">
               <% if book.image_url.present? %>
-                <%= image_tag book.image_url, class: "w-36 h-64 object-cover rounded-lg mb-4 shadow-md", alt: book.title || "Book image" %>
+                <%= image_tag book.image_url, class: "w-40 h-60 object-cover rounded-lg mb-4", alt: book.title || "Book image" %>
               <% else %>
-                <div class="w-36 h-64 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-500 text-sm">No Image</div>
+                <div class="w-40 h-60 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-500 text-sm">No Image</div>
               <% end %>
-              <h4 class="text-lg font-semibold text-gray-800 text-center h-16 line-clamp-3 overflow-hidden"><%= book.title.present? ? book.title : "Untitled Book" %></h4>
-              <p class="text-gray-600 text-sm h-8 line-clamp-2 overflow-hidden mt-2">by <%= book.author.present? ? book.author : "Unknown Author" %></p>
-              <p class="text-gray-500 text-xs italic h-6 line-clamp-1 overflow-hidden mt-2">Genre: <%= book.genre.present? ? book.genre : "Unknown Genre" %></p>
-              <p class="text-red-900 font-bold text-md mt-auto pt-4">$<%= book.price.present? ? book.price : "N/A" %></p>
+              <h4 class="text-lg font-semibold text-gray-800 text-center h-16 line-clamp-2 overflow-hidden"><%= book.title.present? ? book.title : "Untitled Book" %></h4>
+              <p class="text-gray-600 text-sm h-8 line-clamp-2 overflow-hidden mt-2">by <%= book.author.present? ? book.author.name : "Unknown Author" %></p>
+              <p class="text-gray-500 text-xs italic h-6 line-clamp-1 overflow-hidden mt-2">Genre: <%= book.genre.present? ? book.genre.name : "Unknown Genre" %></p>
+              <p class="text-red-900 font-bold text-md mt-2">$<%= book.price.present? ? book.price : "N/A" %></p>
             </div>
           <% end %>
         <% end %>

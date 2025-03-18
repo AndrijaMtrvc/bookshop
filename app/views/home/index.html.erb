@@ -14,7 +14,7 @@
     <div class="flex flex-row gap-6 justify-center">
       <% @best_of_the_week.each do |book| %>
         <%= link_to shop_path(book), class: "block" do %>
-          <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-[300px] h-[480px]">
+          <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-[300px] h-[480px]">
             <div class="w-36 h-64 overflow-hidden rounded-lg mb-4 shadow-md">
               <% if book.image_url.present? %>
                 <%= image_tag book.image_url, class: "w-full h-full object-cover object-center", alt: book.title || "Book image" %>
@@ -22,10 +22,12 @@
                 <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">No Image</div>
               <% end %>
             </div>
-            <h4 class="text-lg font-semibold text-gray-800 text-center h-16 line-clamp-3 overflow-hidden"><%= book.title.present? ? book.title : "Untitled Book" %></h4>
-            <p class="text-gray-600 text-sm h-8 line-clamp-2 overflow-hidden mt-2">by <%= book.author.present? ? book.author : "Unknown Author" %></p>
-            <p class="text-gray-500 text-xs italic h-6 line-clamp-1 overflow-hidden mt-2">Genre: <%= book.genre.present? ? book.genre : "Unknown Genre" %></p>
-            <p class="text-red-900 font-bold text-md mt-auto pt-4">$<%= book.price.present? ? book.price : "N/A" %></p>
+            <div class="flex flex-col items-center space-y-2 flex-grow">
+              <h4 class="text-lg font-semibold text-gray-800 text-center h-16 line-clamp-3 overflow-hidden"><%= book.title.present? ? book.title : "Untitled Book" %></h4>
+              <p class="text-gray-600 text-sm h-8 line-clamp-2 overflow-hidden">by <%= book.author.present? ? book.author.name : "Unknown Author" %></p>
+              <p class="text-gray-500 text-xs italic h-6 line-clamp-1 overflow-hidden">Genre: <%= book.genre.present? ? book.genre.name : "Unknown Genre" %></p>
+            </div>
+            <p class="text-red-900 font-bold text-md h-6">$<%= book.price.present? ? book.price : "N/A" %></p>
           </div>
         <% end %>
       <% end %>
@@ -42,9 +44,9 @@
   <div class="max-w-7xl mx-auto px-4">
     <% if @author_of_the_week && @author_book %>
       <div class="flex flex-col items-center">
-        <h3 class="text-2xl font-semibold text-gray-800 mb-4"><%= @author_of_the_week %></h3>
+        <h3 class="text-2xl font-semibold text-gray-800 mb-4"><%= @author_of_the_week.name %></h3>
         <%= link_to shop_path(@author_book), class: "block" do %>
-          <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-[300px] h-[480px]">
+          <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-[300px] h-[480px]">
             <div class="w-36 h-64 overflow-hidden rounded-lg mb-4 shadow-md">
               <% if @author_book.image_url.present? %>
                 <%= image_tag @author_book.image_url, class: "w-full h-full object-cover object-center", alt: @author_book.title || "Book image" %>
@@ -52,10 +54,12 @@
                 <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">No Image</div>
               <% end %>
             </div>
-            <h4 class="text-lg font-semibold text-gray-800 text-center h-16 line-clamp-3 overflow-hidden"><%= @author_book.title.present? ? @author_book.title : "Untitled Book" %></h4>
-            <p class="text-gray-600 text-sm h-8 line-clamp-2 overflow-hidden mt-2">by <%= @author_book.author.present? ? @author_book.author : "Unknown Author" %></p>
-            <p class="text-gray-500 text-xs italic h-6 line-clamp-1 overflow-hidden mt-2">Genre: <%= @author_book.genre.present? ? @author_book.genre : "Unknown Genre" %></p>
-            <p class="text-red-900 font-bold text-md mt-auto pt-4">$<%= @author_book.price.present? ? @author_book.price : "N/A" %></p>
+            <div class="flex flex-col items-center space-y-2 flex-grow">
+              <h4 class="text-lg font-semibold text-gray-800 text-center h-16 line-clamp-3 overflow-hidden"><%= @author_book.title.present? ? @author_book.title : "Untitled Book" %></h4>
+              <p class="text-gray-600 text-sm h-8 line-clamp-2 overflow-hidden">by <%= @author_book.author.present? ? @author_book.author.name : "Unknown Author" %></p>
+              <p class="text-gray-500 text-xs italic h-6 line-clamp-1 overflow-hidden">Genre: <%= @author_book.genre.present? ? @author_book.genre.name : "Unknown Genre" %></p>
+            </div>
+            <p class="text-red-900 font-bold text-md h-6">$<%= @author_book.price.present? ? @author_book.price : "N/A" %></p>
           </div>
         <% end %>
       </div>

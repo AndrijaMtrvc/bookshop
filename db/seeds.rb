@@ -1,67 +1,72 @@
+# db/seeds.rb
+
+# Počisti obstoječe podatke (opcijsko, če želiš svež začetek)
 Book.destroy_all
-User.destroy_all
+Author.destroy_all
+Genre.destroy_all
 
-# Uporabnik Andrija Mitrović
-User.create!(
-  email_address: "andrija.mitrovic@scv.si",
-  password: "bXum6A07IH5",
-  password_confirmation: "bXum6A07IH5",
-  first_name: "Andrija",
-  last_name: "Mitrović",
-  status: "admin" # Privzeto, spremeni v "admin" prek konzole, če želiš
-)
-
-# Dejanske knjige
-books = [
-  {
-    title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    genre: "Fiction",
-    price: 10.99,
-    stock: 15,
-    image_url: "https://m.media-amazon.com/images/I/51IXWZzlgSL._SY445_SX342_.jpg",
-    description: "A gripping, heart-wrenching, and wholly remarkable tale of coming-of-age in a South poisoned by virulent prejudice."
-  },
-  {
-    title: "1984",
-    author: "George Orwell",
-    genre: "Sci-Fi",
-    price: 8.99,
-    stock: 20,
-    image_url: "https://m.media-amazon.com/images/I/7180qjGSgDL._AC_UY327_FMwebp_QL65_.jpg",
-    description: "A dystopian novel set in a totalitarian society under constant surveillance, where independent thinking is a crime."
-  },
-  {
-    title: "Pride and Prejudice",
-    author: "Jane Austen",
-    genre: "Romance",
-    price: 7.50,
-    stock: 12,
-    image_url: "https://m.media-amazon.com/images/I/81NLDvyAHrL._AC_UY327_FMwebp_QL65_.jpg",
-    description: "A classic romance novel exploring love, class, and societal expectations through the spirited Elizabeth Bennet."
-  },
-  {
-    title: "The Hobbit",
-    author: "J.R.R. Tolkien",
-    genre: "Fantasy",
-    price: 12.99,
-    stock: 10,
-    image_url: "https://m.media-amazon.com/images/I/712cDO7d73L._AC_UY327_FMwebp_QL65_.jpg",
-    description: "A fantasy adventure following Bilbo Baggins as he embarks on a quest to reclaim a lost dwarf kingdom."
-  },
-  {
-    title: "Sapiens: A Brief History of Humankind",
-    author: "Yuval Noah Harari",
-    genre: "Non-Fiction",
-    price: 15.99,
-    stock: 8,
-    image_url: "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-    description: "A thought-provoking exploration of the history of humankind, from the Stone Age to the modern era."
-  }
+# Dodaj avtorje
+authors = [
+  Author.create!(name: "J.K. Rowling"),
+  Author.create!(name: "George R.R. Martin"),
+  Author.create!(name: "Agatha Christie"),
+  Author.create!(name: "J.R.R. Tolkien")
 ]
 
-books.each do |book|
-  Book.create!(book)
-end
+# Dodaj žanre
+genres = [
+  Genre.create!(name: "Fantasy"),
+  Genre.create!(name: "Mystery"),
+  Genre.create!(name: "Adventure")
+]
 
-puts "Seeded 1 user (Andrija Mitrović) and 5 real books."
+# Dodaj knjige z URL-ji slik
+books = [
+  Book.create!(
+    title: "Harry Potter and the Philosopher's Stone",
+    author: authors[0], # J.K. Rowling
+    genre: genres[0],   # Fantasy
+    price: 19.99,
+    stock: 10,
+    description: "A young wizard's journey begins!",
+    image_url: "https://m.media-amazon.com/images/I/81q77Q39nEL.jpg"
+  ),
+  Book.create!(
+    title: "A Game of Thrones",
+    author: authors[1], # George R.R. Martin
+    genre: genres[0],   # Fantasy
+    price: 29.99,
+    stock: 5,
+    description: "Epic tale of kings and dragons.",
+    image_url: "https://m.media-amazon.com/images/I/71Jzezm8CBL.jpg"
+  ),
+  Book.create!(
+    title: "Murder on the Orient Express",
+    author: authors[2], # Agatha Christie
+    genre: genres[1],   # Mystery
+    price: 15.99,
+    stock: 8,
+    description: "A classic whodunit on a train.",
+    image_url: "https://m.media-amazon.com/images/I/71ihbKf67RL.jpg"
+  ),
+  Book.create!(
+    title: "The Hobbit",
+    author: authors[3], # J.R.R. Tolkien
+    genre: genres[2],   # Adventure
+    price: 22.50,
+    stock: 7,
+    description: "An unexpected journey with hobbits.",
+    image_url: "https://m.media-amazon.com/images/I/712cDO7d73L.jpg"
+  )
+]
+User.create!(
+  first_name: "Andrija",
+  last_name: "Mitrović",
+  email_address: "andrija.mitrovic@scv.si",
+  password: "bXum6A07IH5",
+  status: "admin"
+)
+
+puts "Seeded user Andrija Mitrović."
+
+puts "Seeded #{authors.count} authors, #{genres.count} genres, and #{books.count} books."

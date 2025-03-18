@@ -8,8 +8,8 @@
       <% end %>
       <div class="flex-1 flex flex-col text-center md:text-left p-4">
         <h2 class="text-4xl font-bold text-gray-800 mt-4"><%= @book.title %></h2>
-        <p class="text-gray-600 text-xl mt-4">by <%= @book.author %></p>
-        <p class="text-gray-500 text-lg italic mt-2">Genre: <%= @book.genre %></p>
+        <p class="text-gray-600 text-xl mt-4">by <%= @book.author.present? ? @book.author.name : "Unknown Author" %></p>
+        <p class="text-gray-500 text-lg italic mt-2">Genre: <%= @book.genre.present? ? @book.genre.name : "Unknown Genre" %></p>
         <p class="text-red-900 font-bold text-3xl mt-4">$<%= @book.price %></p>
         <div class="flex items-center gap-4 mt-4">
           <%= form_with url: add_to_cart_shop_path(@book), method: :post, local: true, class: "flex items-center gap-2" do |form| %>

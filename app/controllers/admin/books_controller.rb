@@ -2,30 +2,34 @@ module Admin
   class BooksController < ApplicationController
     before_action :require_login
     before_action :ensure_admin
-    before_action :set_book, only: [:edit, :update]
+    before_action :set_book, only: [:edit, :update, :destroy]
 
     def index
-      @books = Book.all
-      @genres = Book.distinct.pluck(:genre)
-      @authors = Book.distinct.pluck(:author)
+      @books = Book.includes(:author, :genre).all # Dodan includes za učinkovitost
+      @genres = Genre.order(:name) # Razvrščeno po imenu
+      @authors = Author.order(:name) # Razvrščeno po imenu
+
       if params[:search].present?
-        @books = @books.where("title LIKE ? OR author LIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
+        search_term = "%#{params[:search].downcase}%"
+        @books = @books.joins(:author).where("LOWER(books.title) LIKE ? OR LOWER(authors.name) LIKE ?", search_term, search_term)
       end
-      if params[:genres].present?
-        @books = @books.where(genre: params[:genres])
+
+      if params[:genres].present? && params[:genres].reject(&:blank?).any?
+        @books = @books.where(genre_id: params[:genres].reject(&:blank?))
       end
-      if params[:authors].present?
-        @books = @books.where(author: params[:authors])
+      if params[:authors].present? && params[:authors].reject(&:blank?).any?
+        @books = @books.where(author_id: params[:authors].reject(&:blank?))
       end
+
       case params[:sort]
       when "price_low_to_high"
         @books = @books.order(price: :asc)
       when "price_high_to_low"
         @books = @books.order(price: :desc)
       when "author_a_to_z"
-        @books = @books.order(author: :asc)
+        @books = @books.joins(:author).order("authors.name ASC")
       when "author_z_to_a"
-        @books = @books.order(author: :desc)
+        @books = @books.joins(:author).order("authors.name DESC")
       when "title_a_to_z"
         @books = @books.order(title: :asc)
       when "title_z_to_a"
@@ -33,15 +37,41 @@ module Admin
       end
     end
 
+    def new
+      @book = Book.new
+      @authors = Author.order(:name) # Razvrščeno po imenu
+      @genres = Genre.order(:name) # Razvrščeno po imenu
+    end
+
+    def create
+      @book = Book.new(book_params)
+      if @book.save
+        redirect_to admin_path, notice: "Book added successfully!"
+      else
+        @authors = Author.order(:name)
+        @genres = Genre.order(:name)
+        render :new, status: :unprocessable_entity
+      end
+    end
+
     def edit
+      @authors = Author.order(:name) # Razvrščeno po imenu
+      @genres = Genre.order(:name) # Razvrščeno po imenu
     end
 
     def update
       if @book.update(book_params)
         redirect_to admin_path, notice: "Book updated successfully!"
       else
+        @authors = Author.order(:name)
+        @genres = Genre.order(:name)
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    def destroy
+      @book.destroy
+      redirect_to admin_path, notice: "Book was successfully deleted."
     end
 
     private
@@ -59,7 +89,7 @@ module Admin
     end
 
     def book_params
-      params.require(:book).permit(:title, :author, :genre, :price, :image_url, :stock, :description)
+      params.require(:book).permit(:title, :author_id, :genre_id, :price, :image_url, :stock, :description)
     end
   end
 end

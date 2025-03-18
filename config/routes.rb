@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  # Spremenjen root na home#index
   root "home#index"
 
   resource :session, only: [:new, :create]
@@ -10,7 +9,7 @@ Rails.application.routes.draw do
 
   get "/admin", to: "admin#index", as: :admin
   namespace :admin do
-    resources :books, only: [:edit, :update]
+    resources :books, only: [:new, :create, :edit, :update, :destroy] # Dodan :destroy
   end
 
   resources :shop, controller: "shop", only: [:index, :show] do
@@ -25,6 +24,5 @@ Rails.application.routes.draw do
     end
   end
 
-  # Dodana pot za HomeController
   get "home/index"
 end

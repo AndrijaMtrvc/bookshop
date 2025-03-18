@@ -2,6 +2,9 @@
   <div class="w-full px-4">
     <div class="bg-gradient-to-r from-orange-100 to-orange-200 py-6">
       <h2 class="text-4xl font-bold text-red-900 text-center mb-6">Admin Panel - Manage Books</h2>
+      <div class="flex justify-center mb-6">
+        <%= link_to "Add New Book", new_admin_book_path, class: "bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition duration-200" %>
+      </div>
       <div class="mb-6 max-w-7xl mx-auto">
         <%= form_with url: admin_path, method: :get, local: true, class: "flex justify-center gap-3" do %>
           <%= text_field_tag :search, params[:search], placeholder: "Search by title or author...", class: "p-3 border rounded-lg w-full max-w-lg focus:outline-none focus:ring-2 focus:ring-red-900 shadow-sm" %>
@@ -39,6 +42,7 @@
               <% params[:authors]&.each do |author| %>
                 <%= hidden_field_tag "authors[]", author %>
               <% end %>
+              <%= hidden_field_tag :search, params[:search] %>
             <% end %>
           </div>
         </div>
@@ -52,11 +56,11 @@
         <%= form_with url: admin_path, method: :get, local: true, class: "flex flex-col md:flex-row gap-6" do %>
           <div class="flex-1">
             <label for="genres" class="text-gray-700 font-semibold block mb-2">Filter by Genre:</label>
-            <%= select_tag "genres[]", options_for_select(@genres, params[:genres]), multiple: true, class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
+            <%= select_tag "genres[]", options_from_collection_for_select(@genres, :id, :name, params[:genres]), multiple: true, include_blank: "All Genres", class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
           </div>
           <div class="flex-1">
             <label for="authors" class="text-gray-700 font-semibold block mb-2">Filter by Author:</label>
-            <%= select_tag "authors[]", options_for_select(@authors, params[:authors]), multiple: true, class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
+            <%= select_tag "authors[]", options_from_collection_for_select(@authors, :id, :name, params[:authors]), multiple: true, include_blank: "All Authors", class: "p-3 border rounded-lg bg-white text-gray-700 w-full h-40 shadow-sm" %>
           </div>
           <div class="flex items-end gap-3">
             <%= submit_tag "Apply Filters", class: "bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition duration-200" %>
@@ -76,12 +80,13 @@
               <div class="w-40 h-60 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-500 text-sm">No Image</div>
             <% end %>
             <h4 class="text-lg font-semibold text-gray-800 text-center h-12 line-clamp-2 overflow-hidden"><%= book.title.present? ? book.title : "Untitled Book" %></h4>
-            <p class="text-gray-600 text-sm h-6 line-clamp-1 overflow-hidden mt-2">by <%= book.author.present? ? book.author : "Unknown Author" %></p>
-            <p class="text-gray-500 text-xs italic h-5 line-clamp-1 overflow-hidden mt-2">Genre: <%= book.genre.present? ? book.genre : "Unknown Genre" %></p>
+            <p class="text-gray-600 text-sm h-6 line-clamp-1 overflow-hidden mt-2">by <%= book.author.present? ? book.author.name : "Unknown Author" %></p>
+            <p class="text-gray-500 text-xs italic h-5 line-clamp-1 overflow-hidden mt-2">Genre: <%= book.genre.present? ? book.genre.name : "Unknown Genre" %></p>
             <p class="text-gray-600 text-xs h-10 line-clamp-2 overflow-hidden mt-2"><%= book.description.present? ? book.description : "No description available" %></p>
             <p class="text-red-900 font-bold text-md h-6 mt-2">$<%= book.price.present? ? book.price : "N/A" %></p>
             <p class="text-gray-600 text-sm h-6 mt-2">Stock: <%= book.stock.present? ? book.stock : "N/A" %></p>
-            <%= link_to "Edit", edit_admin_book_path(book), class: "mt-auto bg-blue-600 text-red-700 py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+            <%= link_to "Edit", edit_admin_book_path(book), class: "mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+            <%= button_to "Delete", admin_book_path(book), method: :delete, data: { confirm: "Are you sure you want to delete '#{book.title}'?" }, class: "mt-2 bg-red-900 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200" %>
           </div>
         <% end %>
       </div>
