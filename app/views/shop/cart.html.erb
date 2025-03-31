@@ -9,8 +9,8 @@
         <% @cart_items.each do |item| %>
           <div class="flex flex-col md:flex-row items-center justify-between border-b py-4">
             <div class="flex items-center">
-              <% if item[:book].image_url.present? %>
-                <%= image_tag item[:book].image_url, class: "w-16 h-24 object-cover rounded-lg mr-4", alt: item[:book].title %>
+              <% if item[:book].image.attached? %>
+                <%= image_tag item[:book].image, class: "w-16 h-24 object-cover rounded-lg mr-4", alt: item[:book].title %>
               <% end %>
               <div>
                 <h3 class="text-xl font-semibold text-gray-800"><%= item[:book].title %></h3>

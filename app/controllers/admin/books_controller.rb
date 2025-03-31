@@ -89,7 +89,7 @@ module Admin
     end
 
     def book_params
-      params.require(:book).permit(:title, :author_id, :genre_id, :price, :image_url, :stock, :description)
+      params.require(:book).permit(:title, :author_id, :genre_id, :price, :stock, :description, :image) # Zamenjali image_url z image
     end
   end
 end
