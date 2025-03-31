@@ -1,3 +1,4 @@
+# config/routes.rb
 Rails.application.routes.draw do
   root "home#index"
 
@@ -7,7 +8,7 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new"
   resources :users, only: [:new, :create]
 
-  get "/admin", to: "admin#index", as: :admin
+  get "/admin", to: "admin/books#index", as: :admin # Posodobljeno, da kaže na Admin::BooksController#index
   namespace :admin do
     resources :books, only: [:new, :create, :edit, :update, :destroy]
   end
@@ -21,8 +22,8 @@ Rails.application.routes.draw do
       patch "update_cart"
       delete "remove_from_cart"
       delete "clear_cart"
-      get "checkout"          # Dodana pot za checkout stran
-      post "complete_checkout" # Dodana pot za obdelavo checkout podatkov
+      get "checkout"
+      post "complete_checkout"
     end
   end
 

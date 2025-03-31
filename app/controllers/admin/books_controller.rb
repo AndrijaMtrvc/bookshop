@@ -1,3 +1,4 @@
+# app/controllers/admin/books_controller.rb
 module Admin
   class BooksController < ApplicationController
     before_action :require_login
@@ -76,20 +77,12 @@ module Admin
 
     private
 
-    def require_login
-      redirect_to new_session_path, alert: "Please sign in first!" unless session[:user_id] && current_user
-    end
-
-    def ensure_admin
-      redirect_to root_path, alert: "Access denied! Admins only." unless current_user.status == "admin"
-    end
-
     def set_book
       @book = Book.find(params[:id])
     end
 
     def book_params
-      params.require(:book).permit(:title, :author_id, :genre_id, :price, :stock, :description, :image) # Zamenjali image_url z image
+      params.require(:book).permit(:title, :author_id, :genre_id, :price, :stock, :description, :image)
     end
   end
 end
