@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   get "/admin", to: "admin#index", as: :admin
   namespace :admin do
-    resources :books, only: [:new, :create, :edit, :update, :destroy] # Dodan :destroy
+    resources :books, only: [:new, :create, :edit, :update, :destroy]
   end
 
   resources :shop, controller: "shop", only: [:index, :show] do
@@ -21,6 +21,8 @@ Rails.application.routes.draw do
       patch "update_cart"
       delete "remove_from_cart"
       delete "clear_cart"
+      get "checkout"          # Dodana pot za checkout stran
+      post "complete_checkout" # Dodana pot za obdelavo checkout podatkov
     end
   end
 

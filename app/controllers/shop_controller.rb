@@ -89,4 +89,52 @@ class ShopController < ApplicationController
     session[:cart] = {}
     redirect_to cart_shop_index_path, notice: "Cart cleared!"
   end
+
+  def checkout
+    @cart = session[:cart] || {}
+    @cart_items = Book.where(id: @cart.keys).map do |book|
+      { book: book, quantity: @cart[book.id.to_s] }
+    end
+    if @cart_items.empty?
+      redirect_to cart_shop_index_path, alert: "Your cart is empty!"
+    end
+  end
+
+  def complete_checkout
+    @cart = session[:cart] || {}
+    @cart_items = Book.where(id: @cart.keys).map do |book|
+      { book: book, quantity: @cart[book.id.to_s] }
+    end
+    if @cart_items.empty?
+      redirect_to cart_shop_index_path, alert: "Your cart is empty!"
+      return
+    end
+
+    # Shranimo naročilo v bazo
+    order = Order.create!(
+      user_id: current_user&.id,
+      email: params[:email],
+      phone_number: params[:phone_number],
+      address: params[:address],
+      cart: @cart.to_json,
+      status: "pending"
+    )
+
+    # Posodobimo zalogo knjig
+    @cart_items.each do |item|
+      book = item[:book]
+      quantity = item[:quantity]
+      book.update!(stock: book.stock - quantity)
+    end
+
+    # Izpraznimo košarico
+    session[:cart] = {}
+    redirect_to shop_index_path, notice: "Thank you for your order! Order ID: #{order.id}"
+  end
+
+  private
+
+  def current_user
+    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  end
 end
