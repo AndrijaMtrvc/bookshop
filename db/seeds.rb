@@ -1,4 +1,5 @@
 # db/seeds.rb
+require "open-uri"
 
 # Počisti obstoječe podatke (opcijsko, če želiš svež začetek)
 Book.destroy_all
@@ -20,7 +21,15 @@ genres = [
   Genre.create!(name: "Adventure")
 ]
 
-# Dodaj knjige z URL-ji slik
+# URL-ji slik
+image_urls = [
+  "https://m.media-amazon.com/images/I/81q77Q39nEL.jpg", # Harry Potter
+  "https://m.media-amazon.com/images/I/71Jzezm8CBL.jpg", # A Game of Thrones
+  "https://m.media-amazon.com/images/I/71ihbKf67RL.jpg", # Murder on the Orient Express
+  "https://m.media-amazon.com/images/I/712cDO7d73L.jpg"  # The Hobbit
+]
+
+# Dodaj knjige
 books = [
   Book.create!(
     title: "Harry Potter and the Philosopher's Stone",
@@ -28,8 +37,7 @@ books = [
     genre: genres[0],   # Fantasy
     price: 19.99,
     stock: 10,
-    description: "A young wizard's journey begins!",
-    image_url: "https://m.media-amazon.com/images/I/81q77Q39nEL.jpg"
+    description: "A young wizard's journey begins!"
   ),
   Book.create!(
     title: "A Game of Thrones",
@@ -37,8 +45,7 @@ books = [
     genre: genres[0],   # Fantasy
     price: 29.99,
     stock: 5,
-    description: "Epic tale of kings and dragons.",
-    image_url: "https://m.media-amazon.com/images/I/71Jzezm8CBL.jpg"
+    description: "Epic tale of kings and dragons."
   ),
   Book.create!(
     title: "Murder on the Orient Express",
@@ -46,8 +53,7 @@ books = [
     genre: genres[1],   # Mystery
     price: 15.99,
     stock: 8,
-    description: "A classic whodunit on a train.",
-    image_url: "https://m.media-amazon.com/images/I/71ihbKf67RL.jpg"
+    description: "A classic whodunit on a train."
   ),
   Book.create!(
     title: "The Hobbit",
@@ -55,10 +61,30 @@ books = [
     genre: genres[2],   # Adventure
     price: 22.50,
     stock: 7,
-    description: "An unexpected journey with hobbits.",
-    image_url: "https://m.media-amazon.com/images/I/712cDO7d73L.jpg"
+    description: "An unexpected journey with hobbits."
   )
 ]
+
+# Priloži slike knjigam z Active Storage
+books.each_with_index do |book, index|
+  begin
+    # Prenesi sliko iz URL-ja
+    file = URI.open(image_urls[index])
+    # Priloži sliko z Active Storage
+    book.image.attach(
+      io: file,
+      filename: "#{book.title.parameterize}.jpg",
+      content_type: "image/jpeg"
+    )
+    puts "Attached image to #{book.title}"
+  rescue OpenURI::HTTPError => e
+    puts "Failed to download image for #{book.title}: #{e.message}"
+  rescue StandardError => e
+    puts "Error attaching image to #{book.title}: #{e.message}"
+  end
+end
+
+# Dodaj admin uporabnika
 User.create!(
   first_name: "Andrija",
   last_name: "Mitrović",
@@ -68,5 +94,4 @@ User.create!(
 )
 
 puts "Seeded user Andrija Mitrović."
-
 puts "Seeded #{authors.count} authors, #{genres.count} genres, and #{books.count} books."
