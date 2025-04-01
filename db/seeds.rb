@@ -21,66 +21,82 @@ genres = [
   Genre.create!(name: "Adventure")
 ]
 
-# URL-ji slik
-image_urls = [
-  "https://m.media-amazon.com/images/I/81q77Q39nEL.jpg", # Harry Potter
-  "https://m.media-amazon.com/images/I/71Jzezm8CBL.jpg", # A Game of Thrones
-  "https://m.media-amazon.com/images/I/71ihbKf67RL.jpg", # Murder on the Orient Express
-  "https://m.media-amazon.com/images/I/712cDO7d73L.jpg"  # The Hobbit
-]
-
-# Dodaj knjige
-books = [
-  Book.create!(
+# Podatki za knjige
+book_data = [
+  {
     title: "Harry Potter and the Philosopher's Stone",
     author: authors[0], # J.K. Rowling
     genre: genres[0],   # Fantasy
     price: 19.99,
     stock: 10,
-    description: "A young wizard's journey begins!"
-  ),
-  Book.create!(
+    description: "A young wizard's journey begins!",
+    image_url: "https://m.media-amazon.com/images/I/81q77Q39nEL.jpg"
+  },
+  {
     title: "A Game of Thrones",
     author: authors[1], # George R.R. Martin
     genre: genres[0],   # Fantasy
     price: 29.99,
     stock: 5,
-    description: "Epic tale of kings and dragons."
-  ),
-  Book.create!(
+    description: "Epic tale of kings and dragons.",
+    image_url: "https://m.media-amazon.com/images/I/71Jzezm8CBL.jpg"
+  },
+  {
     title: "Murder on the Orient Express",
     author: authors[2], # Agatha Christie
     genre: genres[1],   # Mystery
     price: 15.99,
     stock: 8,
-    description: "A classic whodunit on a train."
-  ),
-  Book.create!(
+    description: "A classic whodunit on a train.",
+    image_url: "https://m.media-amazon.com/images/I/71ihbKf67RL.jpg"
+  },
+  {
     title: "The Hobbit",
     author: authors[3], # J.R.R. Tolkien
     genre: genres[2],   # Adventure
     price: 22.50,
     stock: 7,
-    description: "An unexpected journey with hobbits."
-  )
+    description: "An unexpected journey with hobbits.",
+    image_url: "https://m.media-amazon.com/images/I/712cDO7d73L.jpg"
+  }
 ]
 
-# Priloži slike knjigam z Active Storage
-books.each_with_index do |book, index|
+# Ustvari knjige in priloži slike
+books = []
+book_data.each do |data|
   begin
+    # Ustvari knjigo brez shranjevanja v bazo
+    book = Book.new(
+      title: data[:title],
+      author: data[:author],
+      genre: data[:genre],
+      price: data[:price],
+      stock: data[:stock],
+      description: data[:description]
+    )
+
     # Prenesi sliko iz URL-ja
-    file = URI.open(image_urls[index])
-    # Priloži sliko z Active Storage
+    file = URI.open(data[:image_url])
     book.image.attach(
       io: file,
       filename: "#{book.title.parameterize}.jpg",
       content_type: "image/jpeg"
     )
     puts "Attached image to #{book.title}"
+
+    # Shrani knjigo v bazo šele po prilaganju slike
+    book.save!
+    books << book
   rescue OpenURI::HTTPError => e
-    puts "Failed to download image for #{book.title}: #{e.message}"
+    puts "Failed to download image for #{data[:title]}: #{e.message}"
+    # Shrani knjigo brez slike, če validacija to dopušča
+    book.save(validate: false) if book
+    books << book if book
   rescue StandardError => e
-    puts "Error attaching image to #{book.title}: #{e.message}"
+    puts "Error processing #{data[:title]}: #{e.message}"
+    # Shrani knjigo brez slike, če validacija to dopušča
+    book.save(validate: false) if book
+    books << book if book
   end
 end
 
