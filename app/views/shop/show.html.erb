@@ -1,9 +1,14 @@
+<!-- app/views/shop/show.html.erb -->
 <div class="bg-gradient-to-r from-orange-100 to-orange-200 min-h-screen flex flex-col items-center justify-center pt-24">
   <div class="max-w-7xl mx-auto px-6 py-10 w-full">
     <div class="bg-white rounded-xl shadow-lg p-8 flex flex-col md:flex-row items-start">
-      <% if @book.image_url.present? %>
+      <% if @book.image.attached? %>
         <div class="p-6 bg-gray-100 rounded-lg">
-          <%= image_tag @book.image_url, class: "w-48 h-86 object-cover rounded-lg shadow-md", alt: @book.title %>
+          <%= image_tag @book.image, class: "w-48 h-86 object-cover rounded-lg shadow-md", alt: @book.title %>
+        </div>
+      <% else %>
+        <div class="p-6 bg-gray-100 rounded-lg w-48 h-86 flex items-center justify-center text-gray-500 text-sm">
+          No Image
         </div>
       <% end %>
       <div class="flex-1 flex flex-col text-center md:text-left p-4">

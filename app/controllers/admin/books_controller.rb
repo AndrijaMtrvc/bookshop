@@ -1,6 +1,6 @@
 # app/controllers/admin/books_controller.rb
 module Admin
-  class BooksController < ApplicationController
+  class BooksController < ::AdminController # Spremenjeno iz ApplicationController v AdminController
     before_action :require_login
     before_action :ensure_admin
     before_action :set_book, only: [:edit, :update, :destroy]

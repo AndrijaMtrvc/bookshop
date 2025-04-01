@@ -1,3 +1,4 @@
+<!-- app/views/shop/index.html.erb -->
 <div class="flex flex-col">
   <div class="w-full px-4">
     <div class="bg-gradient-to-r from-orange-100 to-orange-200 py-6">
@@ -71,8 +72,8 @@
         <% @books.each do |book| %>
           <%= link_to shop_path(book), class: "block" do %>
             <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-full h-full">
-              <% if book.image_url.present? %>
-                <%= image_tag book.image_url, class: "w-40 h-60 object-cover rounded-lg mb-4", alt: book.title || "Book image" %>
+              <% if book.image.attached? %>
+                <%= image_tag book.image, class: "w-40 h-60 object-cover rounded-lg mb-4", alt: book.title || "Book image" %>
               <% else %>
                 <div class="w-40 h-60 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-500 text-sm">No Image</div>
               <% end %>

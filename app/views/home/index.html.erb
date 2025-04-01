@@ -1,3 +1,4 @@
+<!-- app/views/home/index.html.erb -->
 <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-orange-50 to-orange-100">
   <div class="bg-white rounded-2xl shadow-2xl py-16 px-12 max-w-2xl w-full text-center mx-4 md:mx-8 transform transition-all hover:shadow-3xl">
     <h1 class="text-4xl md:text-5xl font-extrabold text-red-900 mb-8 tracking-tight leading-tight">Read Whenever, Wherever You Are</h1>
@@ -16,8 +17,8 @@
         <%= link_to shop_path(book), class: "block" do %>
           <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-[300px] h-[480px]">
             <div class="w-36 h-64 overflow-hidden rounded-lg mb-4 shadow-md">
-              <% if book.image_url.present? %>
-                <%= image_tag book.image_url, class: "w-full h-full object-cover object-center", alt: book.title || "Book image" %>
+              <% if book.image.attached? %>
+                <%= image_tag book.image, class: "w-full h-full object-cover object-center", alt: book.title || "Book image" %>
               <% else %>
                 <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">No Image</div>
               <% end %>
@@ -48,8 +49,8 @@
         <%= link_to shop_path(@author_book), class: "block" do %>
           <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between items-center transition-all duration-300 hover:shadow-xl hover:scale-105 w-[300px] h-[480px]">
             <div class="w-36 h-64 overflow-hidden rounded-lg mb-4 shadow-md">
-              <% if @author_book.image_url.present? %>
-                <%= image_tag @author_book.image_url, class: "w-full h-full object-cover object-center", alt: @author_book.title || "Book image" %>
+              <% if @author_book.image.attached? %>
+                <%= image_tag @author_book.image, class: "w-full h-full object-cover object-center", alt: @author_book.title || "Book image" %>
               <% else %>
                 <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500 text-sm">No Image</div>
               <% end %>
